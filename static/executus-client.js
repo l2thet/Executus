@@ -7,8 +7,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const executusServerURL = "http://localhost:8080";
-const executusGetMusicListURL = `${executusServerURL}/api/listavailablemusic`;
+export const executusServerURL = "http://localhost:8080";
+export const executusGetMusicListURL = `${executusServerURL}/api/listavailablemusic`;
+export const getSongURL = (name) => {
+    return `${executusServerURL}/api/servesong?name=${name}`;
+};
 export const getMusicList = () => __awaiter(void 0, void 0, void 0, function* () {
     const response = yield fetch(executusGetMusicListURL);
     const musicList = yield response.json();

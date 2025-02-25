@@ -7,20 +7,26 @@
 </head>
 
 <body>
-    <button id="loadMusic">Load Music List</button>
+    <button id="loadMusic">Load Music</button>
     <ul id="musicList"></ul>
 
     <script type="module">
-        import { getMusicList } from '/static/executus-client.js';
+        import { getMusicList, getSongURL } from '/static/executus-client.js';
+
         document.getElementById('loadMusic').addEventListener('click', async () => {
             const musicList = await getMusicList();
             const musicListElement = document.getElementById('musicList');
+
             musicListElement.innerHTML = '';
             musicList.forEach(music => {
-
                 const li = document.createElement('li');
+                const audioControl = document.createElement('audio');
                 li.textContent = music;
                 musicListElement.appendChild(li);
+                li.appendChild(audioControl);
+                audioControl.controls = true;
+                audioControl.autoplay = false;
+                audioControl.src = getSongURL(music);
             });
         });
     </script>
