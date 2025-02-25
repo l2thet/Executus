@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Executus Client</title>
+    <script src="/static/executus-client.js" type="module"></script>
+</head>
+
+<body>
+    <button id="loadMusic">Load Music List</button>
+    <ul id="musicList"></ul>
+
+    <script type="module">
+        import { getMusicList } from '/static/executus-client.js';
+        document.getElementById('loadMusic').addEventListener('click', async () => {
+            const musicList = await getMusicList();
+            const musicListElement = document.getElementById('musicList');
+            musicListElement.innerHTML = '';
+            musicList.forEach(music => {
+
+                const li = document.createElement('li');
+                li.textContent = music;
+                musicListElement.appendChild(li);
+            });
+        });
+    </script>
+</body>
+
+</html>
