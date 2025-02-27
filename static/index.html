@@ -4,29 +4,77 @@
 <head>
     <title>Executus Client</title>
     <script src="/static/executus-client.js" type="module"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/darkly/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-L1anLVP0mHy8N7+JjFaPC6bdKXBcXcjc8tnnCVtuTetLiWsN/mF9NE0mkMhQGVv8" crossorigin="anonymous">
 </head>
 
 <body>
-    <button id="loadMusic">Load Music</button>
-    <ul id="musicList"></ul>
+    <div class="col-md-12">
+        <h1 class="text-center">Executus Client</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <h2 class="text-center"><span>Songs</span></h2>
+                <div class="col-md-12 text-center mb-3">
+                    <button type="button" class="btn btn-primary pl-6" id="loadSongs">Load Songs</button>
+                </div>
+                <div class="list-group" id="songList"></div>
+            </div>
+            <div class="col-md-6">
+                <h2 class="text-center"><span>Player</span></h2>
+                <ul id="songPlayer" class="d-flex justify-content-center align-items-center"></ul>
+            </div>
+        </div>
+    </div>
 
     <script type="module">
         import { getMusicList, getSongURL } from '/static/executus-client.js';
 
-        document.getElementById('loadMusic').addEventListener('click', async () => {
+        document.getElementById('loadSongs').addEventListener('click', async () => {
             const musicList = await getMusicList();
-            const musicListElement = document.getElementById('musicList');
+            const musicListElement = document.getElementById('songList');
 
             musicListElement.innerHTML = '';
-            musicList.forEach(music => {
-                const li = document.createElement('li');
+            musicList.forEach((music, index) => {
+                const label = document.createElement('label');
+                label.className = 'list-group-item d-flex gap-2';
+                const input = document.createElement('input');
+                input.className = 'form-check-input flex-shrink-0';
+                input.type = 'radio';
+                input.name = 'listGroupRadios';
+                input.id = 'listGroupRadios' + index;
+                input.value = '';
+                const span = document.createElement('span');
+                span.textContent = music;
+                const small = document.createElement('small');
+                small.className = 'd-block text-body-secondary';
+                small.textContent = '';
+                span.appendChild(small);
+                label.appendChild(input);
+                label.appendChild(span);
+                musicListElement.appendChild(label);
+
+                label.addEventListener('click', () => {
+                    document.querySelectorAll('.list-group-item').forEach(item => item.classList.remove('active'));
+                    label.classList.add('active');
+
+                    const songPlayer = document.getElementById('songPlayer');
+                    songPlayer.innerHTML = '';
+                    const audioControl = document.createElement('audio');
+                    audioControl.controls = true;
+                    audioControl.autoplay = false;
+                    audioControl.src = getSongURL(music);
+                    songPlayer.appendChild(audioControl);
+                });
+
+                /* const li = document.createElement('li');
                 const audioControl = document.createElement('audio');
                 li.textContent = music;
                 musicListElement.appendChild(li);
                 li.appendChild(audioControl);
                 audioControl.controls = true;
                 audioControl.autoplay = false;
-                audioControl.src = getSongURL(music);
+                audioControl.src = getSongURL(music); 
+                */
             });
         });
     </script>
